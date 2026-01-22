@@ -73,7 +73,7 @@ def translator_context(env, obs, topk: int = 4):
     }
     return ctx
 
-
+# More about heuristic policy, can be replaced via calling the model
 def teacher_llm_fn(ctx_json_str: str) -> str:
     """
     Stand-in 'teacher' that *mimics* an LLM by returning a JSON blob
@@ -117,6 +117,8 @@ def teacher_llm_fn(ctx_json_str: str) -> str:
     logits += 0.01 * np.random.randn(num_anchors)
 
     return json.dumps({"action_logits": logits.tolist()})
+
+
 
 
 def parse_teacher_reply(raw_json_str: str, num_anchors: int) -> np.ndarray:
