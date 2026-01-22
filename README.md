@@ -2,7 +2,7 @@
 
 Starting to add reports here!
 
-## 📋 Project Overview
+## Project Overview
 
 This repository contains the implementation and experimental evaluation of two major research tasks:
 
@@ -23,7 +23,7 @@ Extended discrete fixture environment from 9 to 12 anchor locations, incorporati
 - **Observation space**: $\mathbb{R}^{15}$ (12 coordinates + 3 global stats)
 - **Action space**: 13 discrete actions (12 anchors + NOOP)
 
-## 🗂️ Repository Structure
+## Repository Structure
 
 ### Core Implementation Files
 
@@ -69,7 +69,7 @@ TRAINING_RUN_REPORT.md          # Training analysis and findings
 TRAINING_COMPLETE.md            # Training completion summary
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
