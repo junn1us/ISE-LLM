@@ -1,0 +1,20 @@
+{
+  "ppo_scratch": {
+    "rmse_mean": 0.19342764765024184,
+    "rmse_std": 0.039088752712422535,
+    "return_mean": 0.08790343026675103,
+    "return_std": 0.16758171451706577
+  },
+  "ppo_teacher_init": {
+    "rmse_mean": 0.19951948136091233,
+    "rmse_std": 0.023170618056066725,
+    "return_mean": 0.10569406090956392,
+    "return_std": 0.12359852907764679
+  },
+  "paired_deltas": {
+    "rmse_mean_delta": 0.006091833710670471,
+    "rmse_std_delta": 0.04172446292843006,
+    "return_mean_delta": 0.01779063064281288,
+    "return_std_delta": 0.19377201098827102
+  }
+}
