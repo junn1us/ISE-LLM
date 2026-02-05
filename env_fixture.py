@@ -1,4 +1,5 @@
 # env_fixture.py
+# base env utilities / stubs used for testing
 import numpy as np
 import matplotlib.pyplot as plt
 
