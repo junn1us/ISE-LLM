@@ -1,3 +1,5 @@
+#teacher_iface.py
+#small adapter functions (translator_context, parse_teacher_reply) used by multiple tools
 import json
 import numpy as np
 
@@ -5,13 +7,11 @@ import numpy as np
 def translator_context(env, obs, topk: int = 4):
     """
     A compact JSON-compatible context dict from (env, obs)
-    
     This version handles ANY number of anchors (9, 12, etc.) and provides
-    deformation-driven context for interior placement decisions
-
+    deformation-driven context for interior placement decisions =0w0=
     Assumptions:
     env.num_anchors exists
-    obs is a 1D numpy array of deformation features
+    obs ~ a 1D numpy array of deformation features
     obs[:num_anchors] are sag values at anchor locations
     obs[num_anchors:] are global stats (max, mean, std)
     """
@@ -73,7 +73,7 @@ def translator_context(env, obs, topk: int = 4):
     }
     return ctx
 
-# More about heuristic policy, can be replaced via calling the model
+
 def teacher_llm_fn(ctx_json_str: str) -> str:
     """
     Stand-in 'teacher' that *mimics* an LLM by returning a JSON blob
@@ -119,16 +119,12 @@ def teacher_llm_fn(ctx_json_str: str) -> str:
     return json.dumps({"action_logits": logits.tolist()})
 
 
-
-
 def parse_teacher_reply(raw_json_str: str, num_anchors: int) -> np.ndarray:
     """
-    Parse teacher JSON and return a probability vector over anchors.
-
+    Parse teacher JSON & return a probability vector over anchors.
     expected schema:
       {"action_logits": [l_0, l_1, ..., l_{num_anchors-1}]}
-    
-    automatically pads or truncates if logits dimension doesn't match ):
+    automatically pads or truncates if logits dimension doesn't match :,(
     """
     obj = json.loads(raw_json_str)
     logits = np.array(obj["action_logits"], dtype=float)
