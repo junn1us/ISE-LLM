@@ -1,4 +1,5 @@
 # distill_student.py
+#student model & standalone distillation utilities
 
 import argparse
 import numpy as np
@@ -12,8 +13,9 @@ DEVICE = "cpu"
 
 class StudentPolicyDiscrete(nn.Module):
     """
-    Small MLP. outputs a categorical distribution over actions.
-    Used as the distilled student policy.
+    Small MLP
+    outputs a categorical distribution over actions,,
+    Used as the distilled student policy 0w^
     """
 
     def __init__(self, obs_dim: int, n_actions: int, hidden: int = 64):
@@ -105,3 +107,4 @@ def main():
 
 if __name__ == "__main__":   # IMPORTANT: this must be exactly like this
     main()
+
