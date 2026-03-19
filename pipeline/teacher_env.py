@@ -2,9 +2,16 @@ from typing import Callable, List, Optional
 
 import numpy as np
 
+# nanonical SmartFixture dynamics/state core shared by student and teacher interfaces
 from smartfixture_llm4teach.core.fixture_core import FixtureCore
+
+# LLM teacher client relation and default heuristic teacher function 
 from smartfixture_llm4teach.teacher.llm_adapter import LLMClient, default_llm_fn
+
+# parse teacher JSON reply into a normalized probability distribution over candidate actions
 from smartfixture_llm4teach.teacher.parser import parse_action_distribution
+
+# builds teacher-facing state context and streamline it into a compact prompt payload
 from smartfixture_llm4teach.teacher.translator import build_teacher_context, build_teacher_prompt
 
 
