@@ -53,7 +53,7 @@ def _extract_json(text: str) -> str:
         raise ValueError("No JSON object found in LLM output")
     return match.group(0)
 
-
+# imports and uses AutoTokenizer & AutoModelForCausalLM to load and run the model
 def build_hf_llm_fn(
     model_id: str = "openai/gpt-oss-120b",
     max_new_tokens: int = 256,
