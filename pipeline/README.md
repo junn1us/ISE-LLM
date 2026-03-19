@@ -6,13 +6,13 @@ This document defines a reproducible procedure for distillation-then-PPO trainin
 ## Environment
 Use the project virtual environment:
 
-- Python executable: `/Users/junn1us/Library/Mobile Documents/com~apple~CloudDocs/ISYE URP/.venv-1/bin/python`
+- Python executable: `/Users/username/Library/Mobile Documents/folder/.venv-1/bin/python`
 
 ## Single-run training command
 A full run performs teacher distribution collection, student distillation, and PPO fine-tuning.
 
 ```bash
-"/Users/username/Library/Mobile Documents/com~apple~CloudDocs/ISYE URP/.venv-1/bin/python" ppo_finetune.py \
+"/Users/username/Library/Mobile Documents/folder/.venv-1/bin/python" ppo_finetune.py \
   --pretrain-teacher \
   --force-scratch \
   --iters 100 \
@@ -34,7 +34,7 @@ Default seeds in the script: `16, 17, 18`.
 Evaluate checkpoints with stochastic policy rollout and compute 95% confidence intervals.
 
 ```bash
-"/Users/username/Library/Mobile Documents/com~apple~CloudDocs/ISYE URP/.venv-1/bin/python" scripts/evaluate_leaderboard.py \
+"/Users/username/Library/Mobile Documents/folder/.venv-1/bin/python" scripts/evaluate_leaderboard.py \
   --checkpoints \
     ppo_fixture_policy_seed16_it100.pt \
     ppo_fixture_policy_seed17_it100.pt \
