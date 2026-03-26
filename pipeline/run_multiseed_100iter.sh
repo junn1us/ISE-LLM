@@ -6,9 +6,9 @@ PY="$ROOT/.venv-1/bin/python"
 
 cd "$ROOT"
 
-SEEDS=(16 17 18)
-ITERS=100
-EPISODES_PER_ITER=20
+SEEDS=(18 19 20)
+ITERS=200
+EPISODES_PER_ITER=50
 
 for SEED in "${SEEDS[@]}"; do
   OUT="ppo_fixture_policy_seed${SEED}_it${ITERS}.pt"
