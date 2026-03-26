@@ -7,8 +7,8 @@ from smartfixture_llm4teach.core.fixture_core import FixtureCore
 
 class SmartFixtureStudentEnv(gym.Env):
     """
-    Student / PPO environment with numeric observations.
-    Shares transition kernel via FixtureCore.
+    Student agent - PPO environment with numeric observations
+    Shares transition kernel via FixtureCore
     """
 
     metadata = {"render.modes": ["human"]}
