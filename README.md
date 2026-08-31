@@ -1,27 +1,4 @@
-# ISYE URP: PPO Ablation Study with 12-Anchor Fixture Configuration
-
 Starting to add reports here!
-
-## Project Overview
-
-This repository contains the implementation and experimental evaluation of two major research tasks:
-
-### **Task 7.1A: PPO Ablation Study**
-Rigorous comparison of PPO training from random initialization against PPO warm-started with a distilled student policy.
-
-**Key Results:**
-- **PPO-from-scratch**: RMSE $0.1934 \pm 0.0391$, Return $+0.0879 \pm 0.1676$
-- **PPO-teacher-init**: RMSE $0.1995 \pm 0.0232$, Return $+0.1057 \pm 0.1236$
-- **Paired Delta**: RMSE $\Delta = +0.0061$ (not significant), Return $\Delta = +0.0178$ (marginal)
-
-### **Task 7.2B: 12-Anchor Configuration**
-Extended discrete fixture environment from 9 to 12 anchor locations, incorporating both boundary and interior lattice points.
-
-**Configuration:**
-- **Boundary anchors** (8): Corners + edge midpoints
-- **Interior anchors** (4): Lattice points for fine-tuning
-- **Observation space**: $\mathbb{R}^{15}$ (12 coordinates + 3 global stats)
-- **Action space**: 13 discrete actions (12 anchors + NOOP)
 
 ## Repository Structure
 
@@ -69,7 +46,7 @@ TRAINING_RUN_REPORT.md          # Training analysis and findings
 TRAINING_COMPLETE.md            # Training completion summary
 ```
 
-## Quick Start
+## 🚀 Quick Start
 
 ### Prerequisites
 
@@ -108,7 +85,7 @@ pip install -r requirements.txt
 python test_implementation.py --quick
 ```
 
-Expected output: ✓ ALL CRITICAL TESTS PASSED
+
 
 ## Running Experiments
 
