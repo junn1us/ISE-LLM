@@ -1,110 +1,50 @@
-# distill_student.py
-#student model & standalone distillation utilities
+"""
+Distillation process for the student policy in the discrete fixture environment.
+This module contains functions and classes necessary for training the student model
+using knowledge distillation techniques.
+"""
 
-import argparse
-import numpy as np
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-
-DTYPE = torch.float32
-DEVICE = "cpu"
-
+import torch.optim as optim
 
 class StudentPolicyDiscrete(nn.Module):
-    """
-    Small MLP
-    outputs a categorical distribution over actions,,
-    Used as the distilled student policy 0w^
-    """
-
-    def __init__(self, obs_dim: int, n_actions: int, hidden: int = 64):
-        super().__init__()
+    def __init__(self, obs_dim, act_dim, hidden=64):
+        super(StudentPolicyDiscrete, self).__init__()
         self.net = nn.Sequential(
             nn.Linear(obs_dim, hidden),
             nn.Tanh(),
             nn.Linear(hidden, hidden),
             nn.Tanh(),
-            nn.Linear(hidden, n_actions),
+            nn.Linear(hidden, act_dim)
         )
 
-    def forward(self, x: torch.Tensor):
-        logits = self.net(x)
-        probs = F.softmax(logits, dim=-1)
+    def forward(self, obs):
+        logits = self.net(obs)
+        probs = nn.functional.softmax(logits, dim=-1)
         return probs, logits
 
+def distill_train(student_model, teacher_probs, obs, steps=300, lr=5e-3, kl_weight=1.0):
+    optimizer = optim.Adam(student_model.parameters(), lr=lr)
+    ce_loss = nn.CrossEntropyLoss()
 
-def distill_train(
-    model: StudentPolicyDiscrete,
-    X: torch.Tensor,
-    P: torch.Tensor,
-    steps: int = 300,
-    lr: float = 5e-3,
-    beta_reg: float = 1e-4,
-):
-    """
-    Minimize KL(teacher || student) + L2 regularization.
-    X: (N, obs_dim) student inputs
-    P: (N, n_actions) teacher probabilities
-    """
-    opt = torch.optim.Adam(model.parameters(), lr=lr)
+    for step in range(steps):
+        optimizer.zero_grad()
+        student_probs, logits = student_model(obs)
+        
+        # KL Divergence loss
+        kl_loss = torch.sum(teacher_probs * (torch.log(teacher_probs + 1e-12) - torch.log(student_probs + 1e-12)), dim=1).mean()
+        
+        # Cross-entropy loss
+        hard_labels = torch.argmax(teacher_probs, dim=1)
+        cross_entropy = ce_loss(logits, hard_labels)
 
-    for it in range(steps):
-        probs, _ = model(X)
-        # KL(teacher || student)
-        kl = torch.sum(
-            P * (torch.log(P + 1e-8) - torch.log(probs + 1e-8)), dim=1
-        ).mean()
-        reg = sum((p ** 2).sum() for p in model.parameters())
-        loss = kl + beta_reg * reg
-
-        opt.zero_grad()
+        # Total loss
+        loss = kl_weight * kl_loss + cross_entropy
         loss.backward()
-        opt.step()
+        optimizer.step()
 
-        if (it + 1) % 50 == 0:
-            print(
-                f"[distill] step {it+1:3d} "
-                f"loss={loss.item():.4f} kl={kl.item():.4f}"
-            )
+        if (step + 1) % 50 == 0:
+            print(f"[Distillation] Step {step + 1}/{steps} | Loss: {loss.item():.4f} | KL: {kl_loss.item():.4f}")
 
-    return model
-
-
-def main():
-    parser = argparse.ArgumentParser(description="Distill student policy from teacher data")
-    parser.add_argument("--data-X", type=str, default="teacher_data_X.npy", help="Teacher input features")
-    parser.add_argument("--data-P", type=str, default="teacher_data_P.npy", help="Teacher action probabilities")
-    parser.add_argument("--steps", type=int, default=300, help="Distillation training steps")
-    parser.add_argument("--lr", type=float, default=5e-3, help="Learning rate")
-    parser.add_argument("--beta-reg", type=float, default=1e-4, help="L2 regularization coefficient")
-    parser.add_argument("--output", type=str, default="student_policy_init.pt", help="Output checkpoint path")
-    args = parser.parse_args()
-    
-    print(">>> distill_student.py: starting main()")  # debug print
-
-    # Load teacher dataset
-    X_np = np.load(args.data_X)
-    P_np = np.load(args.data_P)
-
-    X = torch.tensor(X_np, dtype=DTYPE, device=DEVICE)
-    P = torch.tensor(P_np, dtype=DTYPE, device=DEVICE)
-
-    obs_dim = X.shape[1]
-    n_actions = P.shape[1]
-
-    print(f"Loaded dataset: X shape {X.shape}, P shape {P.shape}")
-    print(f"Inferred: obs_dim={obs_dim}, n_actions={n_actions}")
-
-    # Build student and distill
-    student = StudentPolicyDiscrete(obs_dim, n_actions).to(DEVICE)
-    student = distill_train(student, X, P, steps=args.steps, lr=args.lr, beta_reg=args.beta_reg)
-
-    # Save weights for PPO warm-start
-    torch.save(student.state_dict(), args.output)
-    print(f"Saved distilled student to {args.output}")
-
-
-if __name__ == "__main__":   # IMPORTANT: this must be exactly like this
-    main()
-
+    return student_model
