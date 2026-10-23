@@ -10,13 +10,13 @@ import numpy as np
 
 def _maybe_disable_transformers_cuda_warmup() -> bool:
     """
-    Optionally disable transformers' caching allocator warmup.
+    optionally disable transformers' caching allocator warmup
 
-    Some remote multi-GPU environments fail inside
+    this is due to some remote multi-GPU environments failing inside
     ``transformers.modeling_utils.caching_allocator_warmup`` when it calls
-    ``torch.cuda.mem_get_info`` during model load. Returning ``True`` here
-    means the warmup function was replaced with a no-op for the current
-    process.
+    ``torch.cuda.mem_get_info`` during model load. 
+    Returning ``True`` here means the warmup function was replaced with a no-op for the current
+    process :D
     """
     flag = os.environ.get("DISABLE_TRANSFORMERS_CUDA_WARMUP", "1").strip().lower()
     if flag in {"", "0", "false", "no", "off"}:
@@ -53,8 +53,7 @@ def default_llm_fn(ctx_json_str: str) -> str:
 
     for i, cand in enumerate(candidates):
         kind = cand.get("type", "noop")
-        # Heuristic rule: if fewer than the required three fixtures are
-        # active, do not consider gravity.
+        # heuristic rule: if fewer than the required three fixtures are active, do not consider gravity
         sag = cand.get("node_sag", 0.0) if gravity_considered else 0.0
         active = cand.get("node_active", 0)
         if kind == "add":
@@ -72,7 +71,7 @@ def default_llm_fn(ctx_json_str: str) -> str:
 
 class LLMClient:
     """
-    Pluggable LLM client. Supply a callable that returns JSON with action_logits/probs.
+    Supply a callable that returns JSON with action_logits/probs.
     """
 
     def __init__(self, llm_fn: Callable[[str], str] = default_llm_fn):
