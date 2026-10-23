@@ -1,4 +1,4 @@
-"""Terminal-layout baselines. Exact means exhaustive feasible masks, NOT return-optimal trajectories."""
+"""terminal-layout baselines. Exact means exhaustive feasible masks, NOT return-optimal trajectories."""
 import argparse
 from itertools import combinations
 import json
